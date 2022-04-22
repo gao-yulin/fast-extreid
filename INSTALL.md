@@ -20,9 +20,8 @@
 ```shell script
 conda create -n fastreid python=3.7
 conda activate fastreid
+conda install pytorch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0 cudatoolkit=11.1 -c pytorch -c conda-forge
 conda install pytorch==1.6.0 torchvision tensorboard -c pytorch
 pip install -r docs/requirements.txt
 ```
 
-# Set up with Dockder
-comming soon

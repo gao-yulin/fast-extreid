@@ -10,6 +10,7 @@ If you want to use other pre-train models, such as MoCo pre-train, you can downl
 ## Compile with cython to accelerate evalution
 
 ```bash
+conda install -c anaconda cython
 cd fastreid/evaluation/rank_cylib; make all
 ```
 
