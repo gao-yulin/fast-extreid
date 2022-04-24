@@ -49,6 +49,7 @@ def default_argument_parser():
         help="whether to attempt to resume from the checkpoint directory",
     )
     parser.add_argument("--eval-only", action="store_true", help="perform evaluation only")
+    parser.add_argument("--extract-feat", action="store_true", help="extract and save features of certain dims from datasets")
     parser.add_argument("--num-gpus", type=int, default=1, help="number of gpus *per machine*")
     parser.add_argument("--num-machines", type=int, default=1, help="total number of machines")
     parser.add_argument(

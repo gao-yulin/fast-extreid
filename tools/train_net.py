@@ -36,6 +36,10 @@ def main(args):
 
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
 
+        if args.extract_feat:
+            print("FEAT TEST for argparser")
+            return None
+
         res = DefaultTrainer.test(cfg, model)
         return res
 
