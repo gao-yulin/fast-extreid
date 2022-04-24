@@ -190,6 +190,7 @@ def extraction_on_dataset(model, data_loader, evaluator, flip_test=False, latent
     num_warmup = min(5, total - 1)
     start_time = time.perf_counter()
     total_compute_time = 0
+    latent_feat = np.empty((0, 2048))
     with inference_context(model), torch.no_grad():
         for idx, inputs in enumerate(data_loader):
             if idx == num_warmup:
@@ -207,9 +208,7 @@ def extraction_on_dataset(model, data_loader, evaluator, flip_test=False, latent
             if torch.cuda.is_available():
                 torch.cuda.synchronize()
             total_compute_time += time.perf_counter() - start_compute_time
-            latent_feat = outputs.detach().cpu().numpy()
-            print("The embedding shape is {}".format(latent_feat.shape))
-            np.savetxt(latent_dir, latent_feat)
+            latent_feat = np.append(latent_feat, outputs.detach().cpu().numpy(), axis=0)
             evaluator.process(inputs, outputs)
 
             iters_after_start = idx + 1 - num_warmup * int(idx >= num_warmup)
@@ -224,6 +223,8 @@ def extraction_on_dataset(model, data_loader, evaluator, flip_test=False, latent
                     ),
                     n=30,
                 )
+        print("The embedding shape is {}".format(latent_feat.shape))
+        np.savetxt(latent_dir, latent_feat)
 
     # Measure the time only for this worker (before the synchronization barrier)
     total_time = time.perf_counter() - start_time
