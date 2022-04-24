@@ -56,9 +56,13 @@ Make sure the dataset path and code are the same in different machines, and mach
 To evaluate a model's performance, use
 
 ```bash
-bitfusion run -n 1 -- python3 tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
-python3 tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only \
-MODEL.WEIGHTS /path/to/checkpoint_file MODEL.DEVICE "cuda:0"
+bitfusion run -n 1 -- python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
+```
+
+To extract latent features, use
+
+```bash
+bitfusion run -n 1 -- python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only --extract-feat MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
 ```
 
 For more options, see `python3 tools/train_net.py -h`.

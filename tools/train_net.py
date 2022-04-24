@@ -38,7 +38,7 @@ def main(args):
 
         if args.extract_feat:
             res = DefaultTrainer.extract(cfg, model)
-            return None
+            return res
 
         res = DefaultTrainer.test(cfg, model)
         return res
