@@ -18,7 +18,7 @@ import torch
 from torch.nn.parallel import DistributedDataParallel
 
 from fastreid.data import build_reid_test_loader, build_reid_train_loader
-from fastreid.evaluation import (ReidEvaluator,
+from fastreid.evaluation import (ReidEvaluator, extraction_on_dataset,
                                  inference_on_dataset, print_csv_format)
 from fastreid.modeling.meta_arch import build_model
 from fastreid.solver import build_lr_scheduler, build_optimizer
@@ -438,6 +438,44 @@ class DefaultTrainer(TrainerBase):
                 results[dataset_name] = {}
                 continue
             results_i = inference_on_dataset(model, data_loader, evaluator, flip_test=cfg.TEST.FLIP.ENABLED)
+            results[dataset_name] = results_i
+
+            if comm.is_main_process():
+                assert isinstance(
+                    results, dict
+                ), "Evaluator must return a dict on the main process. Got {} instead.".format(
+                    results
+                )
+                logger.info("Evaluation results for {} in csv format:".format(dataset_name))
+                results_i['dataset'] = dataset_name
+                print_csv_format(results_i)
+
+        if len(results) == 1:
+            results = list(results.values())[0]
+
+        return results
+
+    @classmethod
+    def extract(cls, cfg, model):
+        """
+        Extract features of certain dims from datasets and save them in "os.path.join(self.cfg.OUTPUT_DIR,
+        "latent_feat.csv")" Args: cfg (CfgNode): model (nn.Module): Returns: dict: a dict of result metrics
+        """
+        logger = logging.getLogger(__name__)
+
+        results = OrderedDict()
+        for idx, dataset_name in enumerate(cfg.DATASETS.TESTS):
+            logger.info("Prepare testing set")
+            try:
+                data_loader, evaluator = cls.build_evaluator(cfg, dataset_name)
+            except NotImplementedError:
+                logger.warn(
+                    "No evaluator found. implement its `build_evaluator` method."
+                )
+                results[dataset_name] = {}
+                continue
+            results_i = extraction_on_dataset(model, data_loader, evaluator, flip_test=cfg.TEST.FLIP.ENABLED,
+                                              latent_dir=os.path.join(cfg.OUTPUT_DIR, "latent_feat.csv"))
             results[dataset_name] = results_i
 
             if comm.is_main_process():
