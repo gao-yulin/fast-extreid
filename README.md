@@ -19,15 +19,13 @@ We provide a large set of baseline results and trained models available for down
 
 ## Deployment
 
-We provide some examples and scripts to convert fastreid model to Caffe, ONNX and TensorRT format in [Fastreid deploy](tools/deploy).
+We provide some examples and scripts to convert fast-extreid model to Caffe, ONNX and TensorRT format in [Fastreid deploy](tools/deploy).
 
 ## License
 
 Fastreid is released under the [Apache 2.0 license](LICENSE).
 
 ## Citing FastReID
-
-If you use FastReID in your research or wish to refer to the baseline results published in the Model Zoo, please use the following BibTeX entry.
 
 ```BibTeX
 @article{he2020fastreid,
