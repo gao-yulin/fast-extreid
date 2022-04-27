@@ -28,29 +28,18 @@ def setup(args):
 
 def main(args):
     cfg = setup(args)
+    cfg.defrost()
+    cfg.MODEL.BACKBONE.PRETRAIN = False
+    model = DefaultTrainer.build_model(cfg)
 
-    if args.eval_only:
-        cfg.defrost()
-        cfg.MODEL.BACKBONE.PRETRAIN = False
-        model = DefaultTrainer.build_model(cfg)
+    Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
 
-        Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
-
-        if args.extract_feat:
-            res = DefaultTrainer.extract(cfg, model)
-            return res
-
-        res = DefaultTrainer.test(cfg, model)
-        return res
-
-    trainer = DefaultTrainer(cfg)
-
-    trainer.resume_or_load(resume=args.resume)
-    return trainer.train()
+    res = DefaultTrainer.extract(cfg, model)
+    return res
 
 
 if __name__ == "__main__":
-    args = default_argument_parser().parse_args()
+    args = default_argument_parser().parse_args(["--config-file", "./configs/Market1501/bagtricks_R50.yml", "--eval-only", "--extract-feat", "MODEL.WEIGHTS", "logs/market1501/bagtricks_R50/model_best.pth", "MODEL.DEVICE cuda:0"])
     print("Command Line Args:", args)
     launch(
         main,
