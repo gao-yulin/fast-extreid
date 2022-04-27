@@ -39,7 +39,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = default_argument_parser().parse_args(["--config-file", "./configs/Market1501/bagtricks_R50.yml", "--eval-only", "--extract-feat", "MODEL.WEIGHTS", "logs/market1501/bagtricks_R50/model_best.pth", "MODEL.DEVICE cuda:0"])
+    args = default_argument_parser().parse_args(["--config-file", "./configs/Market1501/bagtricks_R50.yml", "--eval-only", "--extract-feat", "MODEL.WEIGHTS", "logs/market1501/bagtricks_R50/model_best.pth", "MODEL.DEVICE", "cuda:0"])
     print("Command Line Args:", args)
     launch(
         main,

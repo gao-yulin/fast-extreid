@@ -22,9 +22,8 @@ cd fastreid/evaluation/rank_cylib; make all
 
 ## 命令行中提取特征并评估模型性能
 
-"tools/train_net.py"文件用于训练fast-extreid中提供的所有配置。
+"tools/train_net.py"文件用于训练fast-extreid中提供的所有配置。特征存放于`logs/market1501/bagtricks_R50/latent_feat.csv`
 
 ```bash
-python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only --extract-feat MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
+python tools/train_net.py
 ```
-
