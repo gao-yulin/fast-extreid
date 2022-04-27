@@ -1,68 +1,30 @@
 # Getting Started with Fastreid
 
-## Prepare pretrained model
+## 准备预训练模型
 
-If you use backbones supported by fastreid, you do not need to do anything. It will automatically download the pre-train models.
-But if your network is not connected, you can download pre-train models manually and put it in `~/.cache/torch/checkpoints`.
+Feature Extractor会自动下载预训练的模型，但如果你的网络没有连接，你可以手动下载训练前模型，并把它放在`~/.cache/torch/checkpoints`。 .
 
-If you want to use other pre-train models, such as MoCo pre-train, you can download by yourself and set the pre-train model path in `configs/Base-bagtricks.yml`.
-
-## Compile with cython to accelerate evalution
+## 用cython编译以加速计算
 
 ```bash
 conda install -c anaconda cython
 cd fastreid/evaluation/rank_cylib; make all
 ```
 
-## Training & Evaluation in Command Line
+## 图像数据的格式要求
+完整的Fast-ExtreID项目需要为每个数据集自定义读取数据集的方法。
 
-We provide a script in "tools/train_net.py", that is made to train all the configs provided in fastreid.
-You may want to use it as a reference to write your own training script.
+目前Feature Extractor使用的模型是通过[Market1501](http://188.138.127.15:81/Datasets/Market-1501-v15.09.15.zip) 数据集训练的，
+你可以选择按照Market1501数据集的格式放置文件，其对应数据集配置文件为`fastreid/data/datasets/market1501.py`
 
-To train a model with "train_net.py", first setup up the corresponding datasets following [datasets/README.md](https://github.com/JDAI-CV/fast-reid/tree/master/datasets), then run:
+同时你也可以选择更改其配置文件，只要配置文件中的类初始化方法能够得到正确格式的变量`train`, `query`, `gallery`即可
 
-```bash
-python3 tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml MODEL.DEVICE "cuda:0"
-```
 
-The configs are made for 1-GPU training.
+## 命令行中提取特征并评估模型性能
 
-If you want to train model with 4 GPUs, you can run:
+"tools/train_net.py"文件用于训练fast-extreid中提供的所有配置。
 
 ```bash
-python3 tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --num-gpus 4
+python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only --extract-feat MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
 ```
 
-If you want to train model with multiple machines, you can run:
-
-```
-# machine 1
-export GLOO_SOCKET_IFNAME=eth0
-export NCCL_SOCKET_IFNAME=eth0
-
-python3 tools/train_net.py --config-file configs/Market1501/bagtricks_R50.yml \
---num-gpus 4 --num-machines 2 --machine-rank 0 --dist-url tcp://ip:port 
-
-# machine 2
-export GLOO_SOCKET_IFNAME=eth0
-export NCCL_SOCKET_IFNAME=eth0
-
-python3 tools/train_net.py --config-file configs/Market1501/bagtricks_R50.yml \
---num-gpus 4 --num-machines 2 --machine-rank 1 --dist-url tcp://ip:port 
-```
-
-Make sure the dataset path and code are the same in different machines, and machines can communicate with each other. 
-
-To evaluate a model's performance, use
-
-```bash
-bitfusion run -n 1 -- python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
-```
-
-To extract latent features, use
-
-```bash
-bitfusion run -n 1 -- python tools/train_net.py --config-file ./configs/Market1501/bagtricks_R50.yml --eval-only --extract-feat MODEL.WEIGHTS logs/market1501/bagtricks_R50/model_best.pth MODEL.DEVICE "cuda:0"
-```
-
-For more options, see `python3 tools/train_net.py -h`.

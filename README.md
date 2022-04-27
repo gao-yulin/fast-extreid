@@ -1,25 +1,17 @@
-# FastExtreid
-FastextreID is a research platform that implements state-of-the-art feature extraction and re-identification algorithms.
+# Feature Extractor
+FastextreID是一个研究平台，实现了最先进的特征提取和再识别算法。Feature Extractor项目是**FastextreID**的一部分，为计算机视觉领域的开发人员提供了一个简单的工具包，可以从图像中提取特征。
 
-## Installation
+## 环境配置
 
 See [INSTALL.md](INSTALL.md).
 
-## Quick Start
-
-The designed architecture follows this guide [PyTorch-Project-Template](https://github.com/L1aoXingyu/PyTorch-Project-Template), you can check each folder's purpose by yourself.
+## 使用指南
 
 See [GETTING_STARTED.md](GETTING_STARTED.md).
 
-Learn more at out [documentation](https://fast-reid.readthedocs.io/). And see [projects/](projects) for some projects that are build on top of fastreid.
+## 模型介绍与性能
 
-## Model Zoo and Baselines
-
-We provide a large set of baseline results and trained models available for download in the [Fastreid Model Zoo](MODEL_ZOO.md).
-
-## Deployment
-
-We provide some examples and scripts to convert fast-extreid model to Caffe, ONNX and TensorRT format in [Fastreid deploy](tools/deploy).
+See [Fastreid Model Zoo](MODEL_ZOO.md).
 
 ## License
 
